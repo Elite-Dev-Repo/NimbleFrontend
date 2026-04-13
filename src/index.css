@@ -1,0 +1,19 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #e5d8c5;
+  --color-secondary: #000000;
+}
+
+body {
+  background-color: var(--color-primary);
+  color: var(--color-secondary);
+  font-family: "Inter", sans-serif;
+  overflow-x: hidden;
+}
+
+@layer components {
+  .cont {
+    @apply px-5 max-w-[1250px] mx-auto;
+  }
+}
