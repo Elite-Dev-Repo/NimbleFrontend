@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import Nav from "./components/Nav";
 import Footer from "./components/Footer";
 import { HugeiconsIcon } from "@hugeicons/react";
+import Loading from "./components/Loading";
 import {
   FilterIcon,
   Sorting05Icon,
@@ -120,7 +121,7 @@ const Shop = () => {
 
           <div className="grow">
             {loading ? (
-              <div className="text-center py-20">Loading Collection...</div>
+              <Loading />
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-x-8 gap-y-16">
                 {filteredProducts.map((product) => (
@@ -191,9 +192,6 @@ const Shop = () => {
                       <div className="flex flex-col items-end gap-1">
                         <span className="font-medium text-gray-900">
                           {formatCurrency(Number(product.price))}
-                        </span>
-                        <span className="font-medium bg-white/10 backdrop-blur-3xl border border-white/50 p-2 shadow-sm text-gray-900">
-                          {product.size}
                         </span>
                       </div>
                     </div>

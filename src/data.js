@@ -8,7 +8,7 @@ const BASE_URL = import.meta.env.VITE_API_URL;
 
 export const getProducts = async () => {
   try {
-    const response = await axios.get(`${BASE_URL}products/`);
+    const response = await api.get(`products/`);
     return response.data.results || response.data;
   } catch (error) {
     console.error("Error fetching products:", error);
@@ -16,9 +16,19 @@ export const getProducts = async () => {
   }
 };
 
+export const loadUserDetails = async () => {
+  try {
+    const response = await api.get("me/");
+    console.log("User details response:", response.data.results);
+    return response.data.results;
+  } catch (error) {
+    console.error("Error fetching user details:", error);
+    return null;
+  }
+};
+
 export const getProductDetails = async (productId) => {
   try {
-    // Used standard axios because product info is usually public
     const response = await axios.get(`${BASE_URL}products/${productId}/`);
     return response.data;
   } catch (error) {
@@ -97,4 +107,18 @@ export const formatCurrency = (amount) => {
 export const handleLogout = () => {
   localStorage.removeItem(ACCESS);
   localStorage.removeItem(REFRESH);
+};
+
+export const initializePayment = async (cartItems, amount, user) => {
+  try {
+    const response = await api.post("/payments/initiate/", {
+      amount: amount,
+      email: user.email, // Use user's email for payment processing
+      user: user, // Include user info if needed for the backend to create a payment record
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error initializing payment:", error);
+    throw error;
+  }
 };

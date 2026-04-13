@@ -9,6 +9,7 @@ import {
   ShoppingBag01Icon,
   ArrowRight02Icon,
 } from "@hugeicons/core-free-icons";
+
 import {
   getCartProducts,
   formatCurrency,
@@ -114,6 +115,13 @@ const Cart = () => {
                       <p className="font-semibold">
                         {formatCurrency(item.product.price)}
                       </p>
+                      <button
+                        onClick={() => {}}
+                        className="text-white bg-secondary p-3 hover:text-green-500 flex items-center gap-1 text-xs uppercase font-bold"
+                      >
+                        <HugeiconsIcon icon={ShoppingBag01Icon} size={16} />{" "}
+                        Purchase Item
+                      </button>
                     </div>
                     <div className="flex justify-between mt-8">
                       <div className="flex items-center border rounded-sm">

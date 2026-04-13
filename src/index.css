@@ -17,3 +17,13 @@ body {
     @apply px-5 max-w-[1250px] mx-auto;
   }
 }
+
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #000000;
+  border-radius: 10px;
+}
