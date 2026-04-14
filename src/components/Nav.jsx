@@ -1,10 +1,25 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { PawPrint, ShoppingCart, Search, LogOut } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { ACCESS } from "../constants";
-import { handleLogout } from "../data";
+import { handleLogout, getCartProducts } from "../data";
 
 function Nav() {
+  const [cartCount, setCartCount] = useState(0);
+
+  const fetchCartCount = async () => {
+    try {
+      const res = await getCartProducts();
+      setCartCount(Array.isArray(res) ? res.length : 0);
+      console.log("Cart count updated:", cartCount);
+    } catch (error) {
+      console.error("Error fetching cart count:", error);
+    }
+  };
+  useEffect(() => {
+    fetchCartCount();
+  }, []);
+
   const navLinks = [
     {
       name: "Home",
@@ -28,7 +43,7 @@ function Nav() {
     },
     {
       name: "Contact",
-      href: "/#contact",
+      href: "/#footer",
     },
   ];
 
@@ -56,13 +71,19 @@ function Nav() {
 
           <div className="flex items-center gap-8">
             <div className="flex items-center gap-4">
-              <button className="text-secondary font-light ">
+              <button
+                className="text-secondary font-light "
+                onClick={() => Navigate("/shop")}
+              >
                 <Search />
               </button>
               <button
-                className="text-secondary font-light "
+                className="relative text-secondary font-light "
                 onClick={() => Navigate("/cart")}
               >
+                <p className="absolute -top-2 -right-3 bg-red-400 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                  {cartCount}
+                </p>
                 <ShoppingCart />
               </button>
             </div>

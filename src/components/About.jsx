@@ -24,7 +24,10 @@ const About = () => {
   ];
 
   return (
-    <section className="w-full  text-secondary py-24 px-6 md:px-16 lg:px-24">
+    <section
+      id="about"
+      className="w-full  text-secondary py-24 px-6 md:px-16 lg:px-24"
+    >
       <div className="max-w-7xl mx-auto">
         {/* Story Section */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start mb-32">

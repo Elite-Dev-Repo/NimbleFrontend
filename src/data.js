@@ -19,13 +19,17 @@ export const getProducts = async () => {
 export const loadUserDetails = async () => {
   try {
     const response = await api.get("me/");
-    console.log("User details response:", response.data.results);
-    return response.data.results;
+    console.log("User details response:", response.data);
+    return response.data;
   } catch (error) {
     console.error("Error fetching user details:", error);
     return null;
   }
 };
+
+// loadUserDetails(); // Call this on app load to populate user state
+
+// Call this on app load to populate user state
 
 export const getProductDetails = async (productId) => {
   try {
@@ -42,12 +46,15 @@ export const getProductDetails = async (productId) => {
 export const getCartProducts = async () => {
   try {
     const response = await api.get("/cart-items/");
+    console.log("Cart products response:", response.data.count);
     return response.data.results || response.data;
   } catch (error) {
     console.error("Error fetching cart:", error);
     throw error;
   }
 };
+
+// getCartProducts(); // Call this on Cart page load to populate cart state
 
 export const addToCart = async (productId, quantity) => {
   try {
@@ -109,13 +116,15 @@ export const handleLogout = () => {
   localStorage.removeItem(REFRESH);
 };
 
-export const initializePayment = async (cartItems, amount, user) => {
+export const initializePayment = async (amount, user, email, product_id) => {
   try {
     const response = await api.post("/payments/initiate/", {
       amount: amount,
-      email: user.email, // Use user's email for payment processing
+      email: email, // Use user's email for payment processing
       user: user, // Include user info if needed for the backend to create a payment record
+      product_id: product_id, // Include product ID for the payment record
     });
+    console.log("Payment initialization response:", response.data);
     return response.data;
   } catch (error) {
     console.error("Error initializing payment:", error);

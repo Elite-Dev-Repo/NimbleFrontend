@@ -15,6 +15,8 @@ import {
   formatCurrency,
   updateCartItem,
   deleteCartItem,
+  initializePayment,
+  loadUserDetails,
 } from "./data";
 import { toast, Toaster } from "sonner";
 
@@ -32,6 +34,35 @@ const Cart = () => {
       toast.error("Could not load your cart.");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const purchaseItem = async (item, amount) => {
+    const res = await loadUserDetails();
+    console.log("User details for payment:", res);
+    try {
+      console.log(
+        "Initializing payment for item:",
+        item,
+        "Amount:",
+        amount,
+        res.email,
+        res.id,
+      );
+
+      const paymentData = await initializePayment(
+        parseInt(amount),
+        res.id,
+        res.email,
+        item,
+      );
+      console.log("Payment Data:", paymentData);
+
+      const payUrl = await paymentData.authorization_url;
+      window.location.href = payUrl;
+      // Redirect to payment gateway or show payment modal with paymentData
+    } catch (error) {
+      toast.error("Could not purchase item.");
     }
   };
 
@@ -80,7 +111,7 @@ const Cart = () => {
 
   return (
     <div className="min-h-screen">
-      <Toaster richColors />
+      <Toaster richColors position="top-center" duration={1500} />
       <Nav />
       <main className="max-w-7xl mx-auto pt-32 pb-20 px-6 md:px-16">
         <header className="flex items-center gap-4 mb-12">
@@ -92,7 +123,7 @@ const Cart = () => {
 
         {loading ? (
           <div className="text-center py-20 font-light italic">
-            Syncing with server...
+            Data Syncing, please wait...
           </div>
         ) : cartItems.length > 0 ? (
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-16">
@@ -116,7 +147,12 @@ const Cart = () => {
                         {formatCurrency(item.product.price)}
                       </p>
                       <button
-                        onClick={() => {}}
+                        onClick={() => {
+                          purchaseItem(
+                            item.id,
+                            item.product.price * item.quantity,
+                          );
+                        }}
                         className="text-white bg-secondary p-3 hover:text-green-500 flex items-center gap-1 text-xs uppercase font-bold"
                       >
                         <HugeiconsIcon icon={ShoppingBag01Icon} size={16} />{" "}
@@ -174,7 +210,14 @@ const Cart = () => {
                   <span>Total</span>
                   <span>{formatCurrency(total)}</span>
                 </div>
-                <button className="w-full bg-black text-white py-4 hover:bg-secondary transition-all flex items-center justify-center gap-2">
+                <button
+                  onClick={() =>
+                    toast.message(
+                      "CHILL OUT !!! THIS FEATURE IS STILL IN DEVELOPMENT",
+                    )
+                  }
+                  className="w-full bg-black text-white py-4 hover:bg-secondary transition-all flex items-center justify-center gap-2"
+                >
                   Checkout <HugeiconsIcon icon={ArrowRight02Icon} size={18} />
                 </button>
               </div>

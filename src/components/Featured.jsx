@@ -17,7 +17,7 @@ function Featured() {
   ];
 
   return (
-    <section className="w-full min-h-screen py-20 px-6 md:px-16 ">
+    <section className="w-full min-h-screen py-20 px-6 md:px-16 " id="featured">
       {/* Header Section */}
       <div className="w-full flex items-end justify-between mb-16">
         <div>

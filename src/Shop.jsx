@@ -180,9 +180,9 @@ const Shop = () => {
                       </div>
                     </div>
 
-                    <div className="mt-6 flex justify-between items-start bg-white/10 backdrop-blur-3xl shadow-sm p-4 rounded-sm border border-white/50">
+                    <div className="mt-6 flex justify-between items-start bg-white backdrop-blur-3xl shadow-sm p-4 rounded-sm border border-white/50">
                       <div>
-                        <h3 className="text-lg font-light tracking-tight text-gray-900">
+                        <h3 className="text-lg font-semibold tracking-tight text-gray-900">
                           {product.name}
                         </h3>
                         <p className="text-sm text-gray-400 mt-1 font-light">

@@ -38,7 +38,7 @@ const Footer = () => {
 
   return (
     <footer className="w-full bg-secondary border-t border-gray-100 pt-20 pb-10 px-6 md:px-16 lg:px-24">
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-7xl mx-auto" id="footer">
         {/* Top Section: Branding & Newsletter */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 mb-20">
           <div className="max-w-md">
