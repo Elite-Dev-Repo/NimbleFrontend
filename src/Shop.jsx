@@ -127,7 +127,7 @@ const Shop = () => {
                 {filteredProducts.map((product) => (
                   <div
                     key={product.id}
-                    className="group border border-white cursor-pointer bg-white/10 backdrop-blur-3xl shadow-sm p-4 rounded-sm"
+                    className="group border border-white cursor-pointer bg-white backdrop-blur-3xl shadow-sm p-4 rounded-sm"
                   >
                     <div className="relative aspect-[4/5] bg-[#f9f9f9] overflow-hidden rounded-sm">
                       <img
@@ -180,7 +180,7 @@ const Shop = () => {
                       </div>
                     </div>
 
-                    <div className="mt-6 flex justify-between items-start bg-white backdrop-blur-3xl shadow-sm p-4 rounded-sm border border-white/50">
+                    <div className="mt-6 flex justify-between items-start bg-black/1 backdrop-blur-3xl shadow-sm p-4 rounded-sm border border-white/50">
                       <div>
                         <h3 className="text-lg font-semibold tracking-tight text-gray-900">
                           {product.name}
