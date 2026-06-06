@@ -26,6 +26,7 @@ const Shop = () => {
       setLoading(true);
       const data = await getProducts();
       setProducts(Array.isArray(data) ? data : []);
+      console.log("Fetched products:", data);
 
       const initialQuantities = {};
       if (Array.isArray(data)) {

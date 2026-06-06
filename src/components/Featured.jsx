@@ -20,7 +20,10 @@ function Featured() {
   ];
 
   return (
-    <section className="w-full min-h-screen py-20 px-6 md:px-16 " id="featured">
+    <section
+      className="w-full min-h-fit py-20 px-6 md:px-16 cont"
+      id="featured"
+    >
       {/* Header Section */}
       <div className="w-full flex items-end justify-between mb-16">
         <div>

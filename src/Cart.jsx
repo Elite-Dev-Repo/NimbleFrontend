@@ -15,40 +15,25 @@ import {
   formatCurrency,
   updateCartItem,
   deleteCartItem,
-  initializePayment,
-  loadUserDetails,
+  createOrder,
+  savePendingPayment,
 } from "./data";
 import { toast, Toaster } from "sonner";
 
 const Cart = () => {
   const [cartItems, setCartItems] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [checkoutLoading, setCheckoutLoading] = useState(false);
 
   const fetchCart = async () => {
     try {
       setLoading(true);
       const data = await getCartProducts();
       setCartItems(data || []);
-    } catch (error) {
+    } catch {
       toast.error("Could not load your cart.");
     } finally {
       setLoading(false);
-    }
-  };
-
-  const purchaseItem = async (item, amount) => {
-    const res = await loadUserDetails();
-    try {
-      const paymentData = await initializePayment(
-        parseInt(amount),
-        res.id,
-        res.email,
-        item,
-      );
-      const payUrl = await paymentData.authorization_url;
-      window.location.href = payUrl;
-    } catch (error) {
-      toast.error("Could not purchase item.");
     }
   };
 
@@ -68,7 +53,7 @@ const Cart = () => {
 
     try {
       await updateCartItem(id, newQty);
-    } catch (error) {
+    } catch {
       toast.error("Failed to update quantity");
       fetchCart();
     }
@@ -81,9 +66,32 @@ const Cart = () => {
     try {
       await deleteCartItem(id);
       toast.success("Item removed");
-    } catch (error) {
+    } catch {
       toast.error("Could not remove item");
       setCartItems(previousItems);
+    }
+  };
+
+  const handleCheckout = async () => {
+    try {
+      setCheckoutLoading(true);
+      const { order, payment } = await createOrder();
+
+      if (!payment?.authorization_url || !payment?.reference) {
+        throw new Error("Payment initiation response is incomplete.");
+      }
+
+      savePendingPayment({
+        reference: payment.reference,
+        orderId: order?.id,
+      });
+
+      toast.success("Redirecting to payment");
+      window.location.href = payment.authorization_url;
+    } catch (error) {
+      console.error(error);
+      setCheckoutLoading(false);
+      toast.error("Checkout failed. Please try again.");
     }
   };
 
@@ -133,17 +141,9 @@ const Cart = () => {
                           {formatCurrency(item.product.price)}
                         </p>
                       </div>
-                      <button
-                        onClick={() =>
-                          purchaseItem(
-                            item.id,
-                            item.product.price * item.quantity,
-                          )
-                        }
-                        className="text-white bg-secondary p-2 md:p-3 hover:bg-black transition-colors flex items-center gap-1 text-[10px] md:text-xs uppercase font-bold rounded-sm"
-                      >
+                      <button className="text-white bg-secondary p-2 md:p-3 hover:bg-black transition-colors flex items-center gap-1 text-[10px] md:text-xs uppercase font-bold rounded-sm">
                         <HugeiconsIcon icon={ShoppingBag01Icon} size={14} />
-                        <span className="hidden xs:inline">Purchase</span>
+                        <span className="inline">Purchase</span>
                       </button>
                     </div>
 
@@ -204,14 +204,12 @@ const Cart = () => {
                   <span>{formatCurrency(total)}</span>
                 </div>
                 <button
-                  onClick={() =>
-                    toast.info(
-                      "CHILL OUT !!! THIS FEATURE IS STILL IN DEVELOPMENT",
-                    )
-                  }
-                  className="w-full bg-black text-white py-4 hover:bg-secondary transition-all flex items-center justify-center gap-2 rounded-sm active:scale-95"
+                  onClick={handleCheckout}
+                  disabled={checkoutLoading}
+                  className="w-full bg-black text-white py-4 hover:bg-secondary transition-all flex items-center justify-center gap-2 rounded-sm active:scale-95 disabled:opacity-60 disabled:cursor-not-allowed"
                 >
-                  Checkout <HugeiconsIcon icon={ArrowRight02Icon} size={18} />
+                  {checkoutLoading ? "Initiating Payment..." : "Checkout"}
+                  <HugeiconsIcon icon={ArrowRight02Icon} size={18} />
                 </button>
               </div>
             </div>

@@ -3,6 +3,8 @@ import axios from "axios";
 import { ACCESS, REFRESH } from "./constants";
 
 const BASE_URL = import.meta.env.VITE_API_URL;
+export const PAYMENT_REFERENCE_KEY = "nimble_payment_reference";
+export const PAYMENT_ORDER_KEY = "nimble_payment_order";
 
 // --- PRODUCT FETCHING ---
 
@@ -26,10 +28,6 @@ export const loadUserDetails = async () => {
     return null;
   }
 };
-
-// loadUserDetails(); // Call this on app load to populate user state
-
-// Call this on app load to populate user state
 
 export const getProductDetails = async (productId) => {
   try {
@@ -99,6 +97,89 @@ export const deleteCartItem = async (cartItemId) => {
     throw error;
   }
 };
+export const createOrder = async () => {
+  try {
+    const orderResponse = await api.post("/orders/");
+    const order = orderResponse.data;
+
+    const user = await loadUserDetails();
+
+    const payment = await initializePayment({
+      amount: order.total_price,
+      email: user.email,
+      order: order.id,
+    });
+
+    return { order, payment };
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
+export const getOrderDetails = async (orderId) => {
+  try {
+    const response = await api.get(`/orders/${orderId}/`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching order details:", error);
+    throw error;
+  }
+};
+
+export const initializePayment = async ({ amount, email, order }) => {
+  try {
+    const response = await api.post("/payments/initiate/", {
+      amount,
+      email,
+      order,
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
+export const verifyPayment = async (reference) => {
+  try {
+    const encodedReference = encodeURIComponent(reference);
+    let response;
+
+    try {
+      response = await api.get(`/payments/verify/${encodedReference}/`);
+    } catch (pathError) {
+      if (![400, 404, 405].includes(pathError?.response?.status)) {
+        throw pathError;
+      }
+
+      response = await api.get("/payments/verify/", {
+        params: { reference },
+      });
+    }
+
+    return response.data;
+  } catch (error) {
+    console.error("Error verifying payment:", error);
+    throw error;
+  }
+};
+
+export const savePendingPayment = ({ reference, orderId }) => {
+  if (!reference) return;
+
+  sessionStorage.setItem(PAYMENT_REFERENCE_KEY, reference);
+
+  if (orderId) {
+    sessionStorage.setItem(PAYMENT_ORDER_KEY, orderId);
+  }
+};
+
+export const clearPendingPayment = () => {
+  sessionStorage.removeItem(PAYMENT_REFERENCE_KEY);
+  sessionStorage.removeItem(PAYMENT_ORDER_KEY);
+};
 
 // --- HELPERS ---
 
@@ -114,20 +195,4 @@ export const formatCurrency = (amount) => {
 export const handleLogout = () => {
   localStorage.removeItem(ACCESS);
   localStorage.removeItem(REFRESH);
-};
-
-export const initializePayment = async (amount, user, email, product_id) => {
-  try {
-    const response = await api.post("/payments/initiate/", {
-      amount: amount,
-      email: email, // Use user's email for payment processing
-      user: user, // Include user info if needed for the backend to create a payment record
-      product_id: product_id, // Include product ID for the payment record
-    });
-    console.log("Payment initialization response:", response.data);
-    return response.data;
-  } catch (error) {
-    console.error("Error initializing payment:", error);
-    throw error;
-  }
 };

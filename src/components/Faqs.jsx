@@ -55,13 +55,13 @@ function Faqs() {
   ];
 
   return (
-    <section className=" w-full min-h-screen  py-24 px-6 md:px-16 lg:px-24">
+    <section
+      className=" w-full min-h-screen  py-24 px-6 md:px-16 lg:px-24"
+      id="faqs"
+    >
       <div className=" max-w-7xl mx-auto flex flex-col lg:flex-row gap-20">
         {/* Left Side: Sticky Header */}
         <div className="lg:w-1/3 lg:sticky lg:top-32 h-fit">
-          <span className="text-secondary uppercase tracking-widest text-xs font-bold mb-4 block">
-            Support
-          </span>
           <h2 className="text-5xl font-semibold tracking-tight text-gray-900 mb-6">
             Frequently <br /> Asked Questions
           </h2>

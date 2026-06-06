@@ -66,7 +66,7 @@ function Hero() {
         </div>
 
         {/* Bottom Details */}
-        <div className="w-full flex flex-wrap items-start justify-center lg:justify-start gap-8 mt-16 lg:mt-0">
+        <div className=" cont w-full flex flex-wrap items-start justify-center lg:justify-start gap-8 mt-16 lg:mt-0">
           {details.map((detail) => (
             <div
               key={detail.title}

@@ -3,6 +3,7 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import { Recycle01Icon, Leaf01Icon } from "@hugeicons/core-free-icons";
 import { Footprints } from "lucide-react";
 import { PawPrint } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const About = () => {
   const pillars = [
@@ -76,7 +77,7 @@ const About = () => {
         <div className="relative w-full h-[260px] bg-secondary text-white rounded-lg overflow-hidden flex items-center justify-center">
           <div className="absolute inset-0 bg-black/5 z-10 opacity-90">
             {" "}
-            <PawPrint size={156} className="text-primary" />
+            <PawPrint size={56} className="text-primary" />
           </div>
           <div className="relative z-20 text-center px-6">
             <p className="text-primary font-medium uppercase tracking-widest text-xs mb-4">
@@ -85,9 +86,11 @@ const About = () => {
             <h4 className="text-3xl md:text-5xl font-light mb-6 italic">
               12 Plastic Bottles. 1 Pair of Shoes.
             </h4>
+            <Link to="/shop">
             <button className="px-8 py-3 bg-primary text-secondary text-sm font-medium uppercase tracking-tighter transition-colors">
               Explore our Materials
             </button>
+            </Link>
           </div>
         </div>
       </div>
